@@ -1,0 +1,21 @@
+// notification.proto
+syntax = "proto3";
+
+option java_package = "io.nuwe.technical.api.lib";
+option java_outer_classname = "NotificationProto";
+
+package NotificationProto;
+
+// TODO: TASK 3
+
+// Request payload
+message NotificationRequest {}
+
+// Response payload
+
+message NotificationResponse {}
+
+service NotificationService {
+  // Push notification to device (frontend) 
+
+}

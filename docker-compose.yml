@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  user-service:
+    build:
+      context: .
+      dockerfile: ./user-service/Dockerfile
+    container_name: user-service
+    ports:
+      - "8080:8080"  # HTTP
+      - "9797:9797"  # gRPC
+    networks:
+      - services_network
+    depends_on:
+      - mysql
+    restart: always
+
+  message-service:
+    build:
+      context: .
+      dockerfile: ./message-service/Dockerfile
+    container_name: message-service
+    ports:
+      - "8181:8181"  # HTTP
+      - "9696:9696"  # gRPC
+    networks:
+      - services_network
+    depends_on:
+      - mysql
+    restart: always
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: ./notification-service/Dockerfile
+    container_name: notification-service
+    ports:
+      - "8282:8282"  # HTTP
+      - "9898:9898"  # gRPC
+    networks:
+      - services_network
+    depends_on:
+      - mysql
+    restart: always
+
+  frontend-service:
+    build:
+      context: .
+      dockerfile: ./frontend-grpc-service/Dockerfile
+    container_name: frontend-service
+    ports:
+      - "3030:3030"  # gRPC
+      - "8031:8031"  # HTTP
+    networks:
+      - services_network
+    depends_on:
+      - mysql
+    restart: always
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: getthemall
+      MYSQL_DATABASE: technical_api
+      MYSQL_USER: user
+      MYSQL_PASSWORD: getthemall
+    ports:
+      - "3306:3306"
+    networks:
+      - services_network
+    restart: always
+
+networks:
+  services_network:
+    driver: bridge
