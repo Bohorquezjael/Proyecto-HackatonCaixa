@@ -316,15 +316,19 @@ In addition, to be considered fully done, both notification-service and frontend
 Make sure to read the codebase. It provides with a lot of function that will help you develop the API. 
 
 This project contains 4 + 1 different repositories, each of one has an specific function. These repositories follow the Microservices design. The repositories are:
+
 - **User**: The user repository found as `user-service/`, whose only function is to manage users. It defines a basic CRD for Users. 
 	- **HTTP**: It exposes an HTTP server (backend) to manage the users.
 	- **gRPC**: It exposes an gRPC server (backend) to retireve user information.
+
 - **Message**: The message repository found as `message-service/`, whose function is to send and retrieve messages between users. 
 	- **HTTP**: It exposes an HTTP server (backend) to manage the users.
 	- **gRPC**: It exposes an gRPC server (backend) to send and retreive messages.
+
 - **Notification**: The notification repository found as `notification-service/`, whose only function is send notification to user device.
 	- **HTTP**: It exposes an HTTP server (backend) to list all the notifications send and its state.
 	- **gRPC**: It exposes an gRPC server (backend) to push notifications.
+    
 - **Frontend**: The frontend, a server simulating a frontend device, found as `frontend-grpc-service/` it serves as a testing device to check the notification system.
     - **HTTP**: It exposes an HTTP server to list all the notifications using the frontend service to check the correct functioning and communication between notification and frontend
 	- **gRPC**: It exposes an gRPC server (backend) that accepts notifications.
