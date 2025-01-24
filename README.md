@@ -22,9 +22,7 @@ A repository tree is provided below and should not be modified. Everything you n
 
 ```bash
 caixabank-backend-java-grpc
-├── docker-compose.yml
 ├── frontend-grpc-service
-│   ├── Dockerfile
 │   ├── LICENSE
 │   ├── mvnw
 │   ├── mvnw.cmd
@@ -52,7 +50,6 @@ caixabank-backend-java-grpc
 │          └── resources
 │              └── application.properties
 ├── message-service
-│   ├── Dockerfile
 │   ├── LICENSE
 │   ├── mvnw
 │   ├── mvnw.cmd
@@ -81,7 +78,6 @@ caixabank-backend-java-grpc
 │          └── resources
 │              └── application.properties
 ├── notification-service
-│   ├── Dockerfile
 │   ├── LICENSE
 │   ├── mvnw
 │   ├── mvnw.cmd
@@ -120,8 +116,8 @@ caixabank-backend-java-grpc
 │              ├── notification.proto
 │              └── user.proto
 ├── README.md
+├── build.sh
 └── user-service
-    ├── Dockerfile
     ├── LICENSE
     ├── mvnw
     ├── mvnw.cmd
@@ -348,37 +344,58 @@ Here is a the table of ports used in each service:
 
 **ATTENTION**: You are not allowed to install 3rd party modules nor create new files. Modify only existing files. Everything else is already provided.
 
-### Docker
+### How to run, compile & deliver
 
-A `Dockerfile` for each service  and a `docker-compose` are provided in the project and **must not be modified under any circumstances**. Modifying these files could cause the correction to fail.
+It is very important to read this part well as it contains crucial information for a correct correction of the challenge.
 
-First of all, verify your Docker and docker-compose installation:
+The file [build.sh](./build.sh) contains the commands that you will have to execute whenever you want to compile your code.
 
-```bash
-docker --version
-
-# Both of these commands are correct, use the one that works for you. It depends on how docker-compose is installed.
-docker-compose version
-docker compose version
-```
-
-If not installed, refer to [Docker's installation guide](https://docs.docker.com/engine/install/).
-
-To start the project all you need to do is run the following command:
+The following commands will be executed in the correction:
 
 ```bash
-docker-compose up -d
+#Run User service 
+java -jar user-service/target/technical.api-0.0.1-SNAPSHOT.jar &
+
+# Run the Message service 
+java -jar message-service/target/technical.api-0.0.1-SNAPSHOT.jar &
+
+# Run the Notification service 
+java -jar notification-service/target/technical.api-0.0.1-SNAPSHOT.jar &
+
+# Run the Frontend service 
+java -jar frontend-grpc-service/target/technical.api-0.0.1-SNAPSHOT.jar &
 ```
 
-If you want to delete everything, run this command:
+**Therefore, you should always deliver an updated version of the binaries. To do this, just run `build.sh` before pushing the code and verify that all the `.jar files` have been created in their respective projects inside `/target`.**
+
+**It is also very important that you check if the .jar has been created for the `/proto-definition` project, as this is the one that creates the library needed for the rest of the projects.**
+
+**IMPORTANT NOTE: In case of receiving a 0 in the score even though tasks have been completed, it may be due to a misconfiguration of gRPC or that one of the dependent projects has not compiled correctly.**
+
+### Database
+
+In this case, we will use a dockerised version of MySQL for the correction.
+
+You can use MySQL in any way you want as long as you respect the configuration provided.
+
+In case you want to use a container like ours, run the following command:
 
 ```bash
-docker-compose down -v --rmi all
+docker network create services_network
+
+docker run -d \
+  --name mysql \
+  --network services_network \
+  -e MYSQL_ROOT_PASSWORD=getthemall \
+  -e MYSQL_DATABASE=technical_api \
+  -e MYSQL_USER=user \
+  -e MYSQL_PASSWORD=getthemall \
+  -p 3306:3306 \
+  --restart always \
+  mysql:8.0
 ```
 
-**It is very important not to modify any path specified both in the docker-compose and in the multiple Dockerfiles, everything needed is already configured and modifying anything could cause errors.**
-
-**Before uploading a submission to correct, you have to make sure that the containers you want to test are working correctly. For example, if you do task 1, you have to check by executing this command if at least the `user-service` container and the `DB` are correctly deployed and working as proposed in the README.**
+**It is very important not to modify any path specified in the project.**
 
 ## 📤 Submission
 
@@ -409,11 +426,3 @@ A1: The correction will fail because those changes will not be taken into accoun
 **Q2: Can I add resources that are not in pom.xml?**
 
 A2: No, everything needed to complete the challenge is included.
-
-**Q3: Can I modify docker-compose?**
-
-A3: No, modifying this file may cause the application to malfunction.
-
-**Q4: Can I modify Dockerfiles?**
-
-A4: No, modifying of any of these files may cause the application to malfunction.
