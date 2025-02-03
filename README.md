@@ -157,6 +157,8 @@ caixabank-backend-java-grpc
 
 ### 📑 Detailed information about tasks
 
+⚠️ If you have any problem with the repo you can go to this section of the readme [Repo size](#repository-size)⚠️
+
 #### Task 1
 
 You must implement a set of RESTful endpoints to manage user operations. These include creating users, retrieving all users, retrieving a user by ID, and deleting users (both individually and in bulk). It is essential to implement proper HTTP status codes for each operation and adhere to the following specifications.
@@ -396,6 +398,51 @@ docker run -d \
 ```
 
 **It is very important not to modify any path specified in the project.**
+
+### Repository size
+
+It is possible that due to continuous pushing of large .jar files, the size limit of the repository could be reached.
+
+That is why we add a series of commands to be executed to avoid reaching this limit. 
+
+You can use two versions, one with `BFG Repo Cleaner` and one with `git-filter-repo`.
+
+#### BFG Repo Cleaner
+
+The first thing to do is to make a backup copy of the code. You can do this by simply copying the folders with the different projects into a separate folder. In case something goes wrong, you will never lose your progress.
+
+You can download de .jar file here: [BFG Repo Cleaner](https://rtyley.github.io/bfg-repo-cleaner/)
+
+Move this file to the root folder of the challenge.
+
+Execute the following commands:
+
+```bash
+java -jar bfg.jar --delete-files "*.jar" # Change bfg.jar to the name of your downloaded file
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+git push origin --force --all
+```
+
+#### git-filter-repo
+
+The first thing to do is to make a backup copy of the code. You can do this by simply copying the folders with the different projects into a separate folder. In case something goes wrong, you will never lose your progress.
+
+```bash
+pip install git-filter-repo # Install with pip
+```
+Execute the following commands:
+
+```bash
+git filter-repo --path-glob "*.jar" --invert-paths
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+git push origin --force --all
+```
+
+#### What to do if the repository is full?
+
+If the repository is still full and does not allow any more pushes, please contact NUWE support and we will solve your problem as soon as possible.
 
 ## 📤 Submission
 
