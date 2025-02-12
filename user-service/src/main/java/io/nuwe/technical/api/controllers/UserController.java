@@ -35,17 +35,18 @@ public class UserController {
     @Autowired
     private GrpcClientService grpcClientService;
 
+    @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers(){}
 
-
+    @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") int id){}
 
-
+    @PostMapping("/user")
     public ResponseEntity<User> createUser(@RequestBody User user){}
 
-
+    @DeleteMapping("/user/{id}")
     public ResponseEntity<User> deleteUserById(@PathVariable("id") int id){}
 
-
+    @DeleteMapping("/user/all")
     public ResponseEntity<User> deleteAllUsers(){}
 }

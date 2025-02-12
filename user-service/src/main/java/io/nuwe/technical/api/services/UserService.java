@@ -32,8 +32,8 @@ public class UserService {
     }
 
     public User createUser(User u){
-	userRepository.save(u);
-	return u;
+        return this.userRepository.save(u)
+                        .orElseThrow(() -> HttpStatus.BAD_REQUEST);
     }
 
     public void saveUser(User t){
