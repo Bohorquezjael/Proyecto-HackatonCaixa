@@ -1,0 +1,36 @@
+syntax = "proto3"; // Versión de Protocol Buffers
+
+package io.nuwe.technical.api; // Paquete para evitar conflictos de nombres
+
+// Definición del servicio
+service UserService {
+  rpc CreateUser (UserRequest) returns (UserResponse); // Método para crear un usuario
+  rpc GetUser (GetUserRequest) returns (UserResponse); // Método para obtener un usuario
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse); // Método para eliminar un usuario
+}
+
+// Definición de los mensajes
+message UserRequest {
+  string name = 1; // Campo 1: Nombre del usuario
+  string email = 2; // Campo 2: Email del usuario
+  int32 age = 3; // Campo 3: Edad del usuario
+}
+
+message UserResponse {
+  int32 id = 1; // Campo 1: ID del usuario
+  string name = 2; // Campo 2: Nombre del usuario
+  string email = 3; // Campo 3: Email del usuario
+  int32 age = 4; // Campo 4: Edad del usuario
+}
+
+message GetUserRequest {
+  int32 id = 1; // Campo 1: ID del usuario a obtener
+}
+
+message DeleteUserRequest {
+  int32 id = 1; // Campo 1: ID del usuario a eliminar
+}
+
+message DeleteUserResponse {
+  bool success = 1; // Campo 1: Indica si la eliminación fue exitosa
+}
