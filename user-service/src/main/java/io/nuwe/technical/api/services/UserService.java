@@ -15,21 +15,23 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository){
 	this.userRepository= userRepository;
     }
 
     public List<User> getAllUsers(){
-	List<User> users = userRepository.findAll();
-	return users;
+		return userRepository.findAll();
     }
 
     public Optional<User> getUserById(long id){
-	Optional<User> user = userRepository.findById(id);
-	return user;
+		return userRepository.findById(id);
     }
+
+	public Optional<User> getUserByEmail(String email){
+		return userRepository.findByEmail(email);
+	}
 
     public User createUser(User u){
 	userRepository.save(u);

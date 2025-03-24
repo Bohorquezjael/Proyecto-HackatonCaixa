@@ -15,9 +15,9 @@ public class APIConfig{
 	SpringApplication.run(APIConfig.class, args);
     }
 
-    // @Bean
-    // public WebClient webClient() {
-    // 	return WebClient.create();
-    // }
+//     @Bean
+//     public WebClient webClient() {
+//     	return WebClient.create();
+//     }
 
 }

@@ -12,40 +12,59 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
+@RequestMapping("user")
 public class UserController {
 
-	/* TODO TASK 1: complete the methods */
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    private final GrpcClientService grpcClientService;
 
-    @Autowired
-    private GrpcClientService grpcClientService;
+    public UserController(UserService userService, GrpcClientService grpcClientService) {
+        this.userService = userService;
+        this.grpcClientService = grpcClientService;
+    }
 
-    public ResponseEntity<List<User>> getAllUsers(){}
+    @PostMapping()
+    public ResponseEntity<User> createUser(@RequestBody User user){
+        if(userService.getUserByEmail(user.getEmail()).isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
+    }
 
+    @GetMapping("all")
+    public ResponseEntity<List<User>> getAllUsers(){
+        List<User> users = userService.getAllUsers();
+        if(users.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(users);
+    }
 
-    public ResponseEntity<User> getUserById(@PathVariable("id") int id){}
+    @GetMapping("{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") int id){
+        return userService.getUserById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<User> deleteUserById(@PathVariable("id") int id){
+        if(userService.getUserById(id).isPresent()){
+            User user = userService.getUserById(id).get();
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
-    public ResponseEntity<User> createUser(@RequestBody User user){}
-
-
-    public ResponseEntity<User> deleteUserById(@PathVariable("id") int id){}
-
-
-    public ResponseEntity<User> deleteAllUsers(){}
+    @DeleteMapping("all")
+    public ResponseEntity<User> deleteAllUsers(){
+        userService.deleteAll();
+        return ResponseEntity.ok().build();
+    }
 }
+
