@@ -4,11 +4,13 @@ import io.nuwe.technical.api.entities.*;
 import io.nuwe.technical.api.services.*;
 import io.nuwe.technical.api.grpc.GrpcClientService;
 
+import java.net.URI;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
 
+import org.hibernate.type.descriptor.java.ObjectArrayJavaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +32,8 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<User> createUser(@RequestBody User user){
-        if(userService.getUserByEmail(user.getEmail()).isPresent()){
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
+        User u = userService.createUser(user);
+        return u == null ? ResponseEntity.badRequest().build() : ResponseEntity.created(URI.create("/user/" + u.getId())).body(null);
     }
 
     @GetMapping("all")

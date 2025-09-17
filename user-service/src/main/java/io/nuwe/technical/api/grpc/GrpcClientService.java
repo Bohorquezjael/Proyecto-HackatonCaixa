@@ -28,7 +28,7 @@ public class GrpcClientService {
 	Optional<User> optUser;
 
 	try {
-	    final UserResponse res = this.userStub.getUser(UserRequest.newBuilder().setId(id).build());
+	    final UserResponse res = this.userStub.getUser(GetUserRequest.newBuilder().setId(id).build());
 	    long resId = res.getId();
 	    if (resId < 0) {
 		optUser = Optional.empty();
@@ -38,7 +38,7 @@ public class GrpcClientService {
 		user.setName(res.getName());
 		user.setEmail(res.getEmail());
 		user.setAge(res.getAge());
-		user.setIsSubscribed(res.getIsSubscribed());
+//		user.setIsSubscribed(res.getIsSubscribed());
 		optUser = Optional.of(user);
 	    }
 	    return optUser;

@@ -1,4 +1,3 @@
-// user.proto
 syntax = "proto3";
 
 option java_package = "io.nuwe.technical.api.lib";
@@ -6,15 +5,35 @@ option java_outer_classname = "UserProto";
 
 package userproto;
 
-// TODO: TASK 1
+message UserRequest {
+  int64 id = 1; // Cambiado de int32 a int64 para evitar errores de conversión en Java
+  string name = 2;
+  string email = 3;
+  int32 age = 4;
+}
 
-// Request payload
-message UserRequest {}
+message UserResponse {
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
+  int32 age = 4;
+  bool isSubscribed = 5;
+}
 
-// Response payload
-message UserResponse {}
+message GetUserRequest {
+  int64 id = 1;
+}
+
+message DeleteUserRequest {
+  int64 id = 1;
+}
+
+message DeleteUserResponse {
+  bool success = 1;
+}
 
 service UserService {
-  // Get User and returns the UserResponse
-
+  rpc CreateUser (UserRequest) returns (UserResponse);
+  rpc GetUser (GetUserRequest) returns (UserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
 }

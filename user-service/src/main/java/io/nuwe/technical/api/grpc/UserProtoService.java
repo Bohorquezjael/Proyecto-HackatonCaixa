@@ -21,8 +21,8 @@ public class UserProtoService extends UserServiceGrpc.UserServiceImplBase {
     private UserService userService;
 
     @Override
-    public void getUser(UserRequest req, StreamObserver<UserResponse> responseObserver) {
-	long id = (long)req.getId();
+    public void getUser(GetUserRequest req, StreamObserver<UserResponse> responseObserver) {
+	long id = req.getId();
 	Optional<User> optUser = this.userService.getUserById(id);
 
 	final UserResponse reply;
@@ -33,7 +33,7 @@ public class UserProtoService extends UserServiceGrpc.UserServiceImplBase {
 		.setName(user.getName())
 		.setEmail(user.getEmail())
 		.setAge(user.getAge())
-		.setIsSubscribed(user.getIsSubscribed())
+//		.setIsSubscribed(user.getIsSubscribed())
 		.build();
 	}else {
 	    reply = UserResponse.newBuilder().setId(-1).build();

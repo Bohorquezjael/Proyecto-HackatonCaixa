@@ -34,8 +34,11 @@ public class UserService {
 	}
 
     public User createUser(User u){
-        return this.userRepository.save(u)
-                        .orElseThrow(() -> HttpStatus.BAD_REQUEST);
+        return isUserValid(u) ?  userRepository.save(u) : null;
+    }
+
+    private boolean isUserValid(User u){
+        return !(u.getName() == null || u.getEmail() == null || u.getAge() < 18 || userRepository.findByEmail(u.getEmail()).isPresent());
     }
 
     public void saveUser(User t){
